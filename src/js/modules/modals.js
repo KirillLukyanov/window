@@ -1,14 +1,41 @@
 const modals = () => {
 
-    function openModal (triggerSelector, modalSelector) {
-        document.querySelector(triggerSelector).addEventListener('click', () => {
-            document.querySelector(modalSelector).style.display = 'flex';
+    function bindModal(triggerSelector, modalSelector, closeModalSelector) {
+
+        const trigger = document.querySelectorAll(triggerSelector),
+              modal = document.querySelector(modalSelector),
+              closeModal = document.querySelector(closeModalSelector);
+
+        trigger.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                clearTimeout(modalTimer);
+            });
+        });
+        
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
         });
     }
 
+    const modalTimer = setTimeout(function() {
+        document.querySelector('.popup').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }, 60000);
 
-    openModal('.popup_engineer_btn', '.popup_engineer');
-
+    bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
+    bindModal('.phone_link', '.popup', '.popup .popup_close');
 };
 
 export default modals;
