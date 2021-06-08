@@ -11,7 +11,7 @@ const modals = () => {
                 e.preventDefault();
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
-                clearTimeout(modalTimer);
+                // clearTimeout(modalTimer);
             });
         });
         
@@ -29,10 +29,10 @@ const modals = () => {
         });
     }
 
-    const modalTimer = setTimeout(function() {
-        document.querySelector('.popup').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }, 60000);
+    // const modalTimer = setTimeout(function() {
+    //     document.querySelector('.popup').style.display = 'block';
+    //     document.body.style.overflow = 'hidden';
+    // }, 60000);
 
     bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
     bindModal('.phone_link', '.popup', '.popup .popup_close');
