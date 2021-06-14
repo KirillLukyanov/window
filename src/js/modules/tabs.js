@@ -1,4 +1,4 @@
-const tabs = (tabHeaderSelector, tabSelector, tabContentSelector, activeClass) => {
+const tabs = (tabHeaderSelector, tabSelector, tabContentSelector, activeClass, display = 'block') => {
     const header = document.querySelector(tabHeaderSelector),
           tab = document.querySelectorAll(tabSelector),
           tabContent = document.querySelectorAll(tabContentSelector);
@@ -15,7 +15,7 @@ const tabs = (tabHeaderSelector, tabSelector, tabContentSelector, activeClass) =
 
     function showTabContent(index = 0) {
         tab[index].classList.add(activeClass.replace(/\./g, ''));
-        tabContent[index].style.display = 'block';
+        tabContent[index].style.display = display;
 
         header.addEventListener('click', (event) => {
             const target =  event.target;
@@ -23,7 +23,7 @@ const tabs = (tabHeaderSelector, tabSelector, tabContentSelector, activeClass) =
                 if (target && (target == item || target.parentNode == item)) {
                     hideTabContent();
                     tab[i].classList.add(activeClass);
-                    tabContent[i].style.display = 'block';
+                    tabContent[i].style.display = display;
                 }
             });
         });
