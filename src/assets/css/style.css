@@ -862,11 +862,6 @@ textarea:focus {
 
 }
 
-.popup_content {
-  animation: fadeIn;
-  animation-duration: 0.5s;
-}
-
 .popup_content,
 .popup_engineer_content,
 .popup_calc_end_content {

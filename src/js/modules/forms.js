@@ -1,4 +1,5 @@
 import checkNumInputs from "./checkNumInputs";
+import modalClose from "./modalClose";
 
 const forms = (state) => {
     const form = document.querySelectorAll('form'),
@@ -52,13 +53,20 @@ const forms = (state) => {
                 .then(res => {
                     console.log(res);
                     statusMessage.textContent = message.success;
+
                 })
                 .catch(() => statusMessage.textContent = message.failure)
                 .finally(() => {
                     clearInputs();
+                    state = {
+                        form: 0,
+                        type: "tree"
+                    };
+                    console.log(state);
                     setTimeout(() => {
                         statusMessage.remove();
-                    }, 5000);
+                        modalClose();
+                    }, 3000);
                 });
         });
     });

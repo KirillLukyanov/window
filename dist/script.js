@@ -15161,16 +15161,17 @@ __webpack_require__.r(__webpack_exports__);
 window.addEventListener('DOMContentLoaded', () => {
   "use strict";
 
-  let modalState = {};
+  let modalState = {
+    form: 0,
+    type: "tree"
+  };
   Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
-  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])(modalState);
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider ', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
-}); // последняя модалка должна иссчезать после отправки
-// объект state должен очищаться после отправки
-// проверки на заполненность параметров посредством js
+}); // проверки на заполненность параметров посредством js
 
 /***/ }),
 
@@ -15276,6 +15277,8 @@ const checkNumInputs = selector => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+/* harmony import */ var _modalClose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modalClose */ "./src/js/modules/modalClose.js");
+
 
 
 const forms = state => {
@@ -15322,15 +15325,41 @@ const forms = state => {
         statusMessage.textContent = message.success;
       }).catch(() => statusMessage.textContent = message.failure).finally(() => {
         clearInputs();
+        state = {
+          form: 0,
+          type: "tree"
+        };
+        console.log(state);
         setTimeout(() => {
           statusMessage.remove();
-        }, 5000);
+          Object(_modalClose__WEBPACK_IMPORTED_MODULE_1__["default"])();
+        }, 3000);
       });
     });
   });
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (forms);
+
+/***/ }),
+
+/***/ "./src/js/modules/modalClose.js":
+/*!**************************************!*\
+  !*** ./src/js/modules/modalClose.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const modalClose = () => {
+  const windows = document.querySelectorAll('[data-modal]');
+  windows.forEach(item => {
+    item.style.display = 'none';
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (modalClose);
 
 /***/ }),
 
@@ -15343,39 +15372,61 @@ const forms = state => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-const modals = () => {
+/* harmony import */ var _modalClose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modalClose */ "./src/js/modules/modalClose.js");
+
+
+const modals = state => {
   function bindModal(triggerSelector, modalSelector, closeModalSelector, closeClickOverlay = true) {
     const trigger = document.querySelectorAll(triggerSelector),
           modal = document.querySelector(modalSelector),
-          closeModal = document.querySelector(closeModalSelector),
-          windows = document.querySelectorAll('[data-modal]');
+          closeModal = document.querySelector(closeModalSelector); //   windows = document.querySelectorAll('[data-modal]');
+
     trigger.forEach(item => {
+      const validationMessage = text => {
+        let message = document.createElement('div');
+        message.classList.add('status');
+        message.textContent = text;
+        item.insertAdjacentElement('beforebegin', message);
+        setTimeout(() => {
+          message.remove();
+        }, 3000);
+      };
+
       item.addEventListener('click', e => {
         if (e.target) {
           e.preventDefault();
         }
 
-        windows.forEach(item => {
-          item.style.display = 'none';
-        });
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // clearTimeout(modalTimer);
+        if (modalSelector === '.popup_calc_profile' && (!state.width || !state.height)) {
+          validationMessage('Пожалуйста, введите ширину и высоту');
+        } else if (modalSelector === '.popup_calc_end' && !state.profile) {
+          validationMessage('Пожалуйста, выберите профиль');
+        } else {
+          Object(_modalClose__WEBPACK_IMPORTED_MODULE_0__["default"])();
+          modal.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+        } // windows.forEach(item => {
+        //     item.style.display = 'none';
+        // });
+        // clearTimeout(modalTimer);
+
       });
     });
     closeModal.addEventListener('click', () => {
-      windows.forEach(item => {
-        item.style.display = 'none';
-      });
+      // windows.forEach(item => {
+      //     item.style.display = 'none';
+      // });
+      Object(_modalClose__WEBPACK_IMPORTED_MODULE_0__["default"])();
       modal.style.display = 'none';
       document.body.style.overflow = '';
     });
     modal.addEventListener('click', e => {
       if (e.target === modal && closeClickOverlay) {
-        windows.forEach(item => {
-          item.style.display = 'none';
-        });
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+        // windows.forEach(item => {
+        //     item.style.display = 'none';
+        // });
+        Object(_modalClose__WEBPACK_IMPORTED_MODULE_0__["default"])(); // modal.style.display = 'none';
+        // document.body.style.overflow = '';
       }
     });
   } // const modalTimer = setTimeout(function() {
