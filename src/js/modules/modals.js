@@ -7,7 +7,7 @@ const modals = (state) => {
         const trigger = document.querySelectorAll(triggerSelector),
               modal = document.querySelector(modalSelector),
               closeModal = document.querySelector(closeModalSelector);
-            //   windows = document.querySelectorAll('[data-modal]');
+
 
         
         
@@ -38,54 +38,49 @@ const modals = (state) => {
                     modalClose();
                     modal.style.display = 'block';
                     document.body.style.overflow = 'hidden';
+                    document.body.style.marginRight = `${calcScroll()}px`;
                 }
-                
-                
-                
-                // windows.forEach(item => {
-                //     item.style.display = 'none';
-                // });
-                
 
-                
-                // clearTimeout(modalTimer);
+                clearTimeout(modalTimer);
             });
 
         });
         
 
         closeModal.addEventListener('click', () => {
-            // windows.forEach(item => {
-            //     item.style.display = 'none';
-            // });
             modalClose();
-
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
         });
 
         modal.addEventListener('click', (e) => {
             if (e.target === modal && closeClickOverlay) {
-                // windows.forEach(item => {
-                //     item.style.display = 'none';
-                // });
                 modalClose();
-
-                // modal.style.display = 'none';
-                // document.body.style.overflow = '';
             }
         });
     }
 
-    // const modalTimer = setTimeout(function() {
-    //     document.querySelector('.popup').style.display = 'block';
-    //     document.body.style.overflow = 'hidden';
-    // }, 60000);
+    const modalTimer = setTimeout(function() {
+        document.querySelector('.popup[data-modal]').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        document.body.style.marginRight = `${calcScroll()}px`;
+    }, 3000);
+
+    function calcScroll () {
+        let div = document.createElement('div');
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.overflowY = 'scroll';
+        div.style.visibility = 'hidden';
+    
+        document.body.appendChild(div);
+    
+        let scroll = div.offsetWidth - div.clientWidth;
+        div.remove();
+        return scroll;
+    }
 
     bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
     bindModal('.phone_link', '.popup', '.popup .popup_close');
     bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
-
     bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
     bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
 };
